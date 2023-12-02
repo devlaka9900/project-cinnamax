@@ -18,7 +18,7 @@ if(isset($_POST['add_to_cart'])){
       $message[] = 'product added to cart succesfully';
    }
 
-}
+} 
 
 ?>
 

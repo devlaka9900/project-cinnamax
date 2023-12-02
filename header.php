@@ -2,7 +2,7 @@
 
    <div class="flex">
 
-      <a href="#" class="logo">Cinnamax</a>
+      <a href="Home.html" class="logo">Cinnamax</a>
 
       <nav class="navbar">
          <a href="admin.php">add products</a>
