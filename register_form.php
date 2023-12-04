@@ -1,7 +1,5 @@
 <?php
-@require 'config.php' ;
-session_start();
-
+@include 'config.php';
 if(isset($_POST['submit'] )){
 
     $name = mysqli_real_escape_string($conn, $_POST ['name']);
@@ -10,28 +8,26 @@ if(isset($_POST['submit'] )){
     $cpass = md5($_POST['cpassword']);
     $user_type = $_POST['user_type'];
     
-    $select = "SELECT * FROM user_form WHERE email = '$email' $$ password = '$pass'";
+    $select = "SELECT * FROM user_form WHERE email = '$email'";
     
     $result = mysqli_query($conn, $select);
     
     if(mysqli_num_rows($result) > 0){
-        
-        $row = mysqli_fetch_array($result);
-        
-        if($row['user_type'] == 'admin'){
-            $_SESSION['admin_name'] = $row['name'];
-            header('location : admin_page.php');
-        }
-        
-        elseif($row['user_type'] == 'user'){
-            $_SESSION['user_name'] = $row['name'];
-            header('location : user_page.php');
+        $error[] = 'User already exist';
+    }
+    
+    else{
+        if($pass != $cpass){
+            $error[] = 'Password Not Matched';
         }
         
         else{
-            $error[] = 'Incorrect username or password';
+            $error[] = 'You have success fully registerd !!!';
+            $insert = "INSERT INTO user_form(name, email, password, user_type) VALUES(' $name', '$email', '$pass',  '$user_type')";
+            mysqli_query($conn, $insert);
         }
-}   }
+    }
+}
 ?>
 
 
@@ -40,14 +36,14 @@ if(isset($_POST['submit'] )){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Register Form</title>
     <link rel="Stylesheet" href="loginStyle.css" />
 </head>
 <body>
     <div class ="form-container">
         
         <form action="" method="post">
-            <h3>Login Now</h3>
+            <h3>Register Now</h3>
             
             <?php
                 if(isset($error)){
@@ -57,11 +53,18 @@ if(isset($_POST['submit'] )){
                 };
             ?>
             
+            <input type="text" name="name" required placeholder="Your name Here">
             <input type="email" name="email" required placeholder="Your Email Here">
             <input type="password" name="password" required placeholder="Enter your password">
+            <input type="password" name="cpassword" required placeholder="Re-Enter your password">
             
-            <input type="submit" name="submit" value="Login" class="form-btn">
-            <p>Don't have an account ? <a href="register_form.php">Register Here</a></p>
+            <select name="user_type">
+                <option value="user">Customer</option>
+                <option value="admin">Admin</option>
+            </select>
+            
+            <input type="submit" name="submit" value="register now" class="form-btn">
+            <p>Already have an account ? <a href="login_page.php">Login Here</a></p>
         </form>
     </div>
 </body>
